@@ -45,7 +45,14 @@ public class PlayerController : MonoBehaviour
         else if(lineToMove == 2)
             targetPosition += Vector3.right *lineDistance;
 
-        transform.position = targetPosition;
+        if(transform.position == targetPosition)
+            return;
+        Vector3 diff = targetPosition - transform.position;
+        Vector3 moveDir = diff.normalized * 25 * Time.deltaTime;
+        if(moveDir.sqrMagnitude < diff.sqrMagnitude)
+            controler.Move(moveDir);
+        else
+            controler.Move(diff);
     }
 
     private void Jump()
@@ -59,5 +66,10 @@ public class PlayerController : MonoBehaviour
         dir.z = speed;
         dir.y += gravity * Time.fixedDeltaTime;
         controler.Move(dir * Time.fixedDeltaTime);
+    }
+
+    private void OnCollisionEnter(Collision collision) 
+    {
+        print("Collision Detected");
     }
 }
